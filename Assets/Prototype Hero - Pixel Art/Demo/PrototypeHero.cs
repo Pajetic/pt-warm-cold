@@ -3,6 +3,8 @@ using System.Collections;
 
 public class PrototypeHero : MonoBehaviour {
 
+    [SerializeField] int PlayerNumber = 1;
+
     public float      m_runSpeed = 4.5f;
     public float      m_walkSpeed = 2.0f;
     public float      m_jumpForce = 7.5f;
@@ -68,6 +70,9 @@ public class PrototypeHero : MonoBehaviour {
         // Decrease timer that disables input movement. Used when attacking
         m_disableMovementTimer -= Time.deltaTime;
 
+        string horizontalAxis = "Horizontal" + PlayerNumber;
+        string jumpKey = PlayerNumber == 1 ? "w" : "up";
+
         // Respawn Hero if dead
         if (m_dead && m_respawnTimer < 0.0f)
             RespawnHero();
@@ -93,10 +98,10 @@ public class PrototypeHero : MonoBehaviour {
         float inputX = 0.0f;
 
         if (m_disableMovementTimer < 0.0f)
-            inputX = Input.GetAxis("Horizontal");
+            inputX = Input.GetAxis(horizontalAxis);
 
         // GetAxisRaw returns either -1, 0 or 1
-        float inputRaw = Input.GetAxisRaw("Horizontal");
+        float inputRaw = Input.GetAxisRaw(horizontalAxis);
 
         // Check if character is currently moving
         if (Mathf.Abs(inputRaw) > Mathf.Epsilon && Mathf.Sign(inputRaw) == m_facingDirection)
@@ -223,16 +228,16 @@ public class PrototypeHero : MonoBehaviour {
         }
 
         //Up Attack
-        else if (Input.GetMouseButtonDown(0) && Input.GetKey("w") && !m_dodging && !m_ledgeGrab && !m_ledgeClimb && !m_crouching && m_grounded && m_timeSinceAttack > 0.2f)
-        {
-            m_animator.SetTrigger("UpAttack");
+        //else if (Input.GetMouseButtonDown(0) && Input.GetKey("w") && !m_dodging && !m_ledgeGrab && !m_ledgeClimb && !m_crouching && m_grounded && m_timeSinceAttack > 0.2f)
+        //{
+        //    m_animator.SetTrigger("UpAttack");
 
-            // Reset timer
-            m_timeSinceAttack = 0.0f;
+        //    // Reset timer
+        //    m_timeSinceAttack = 0.0f;
 
-            // Disable movement 
-            m_disableMovementTimer = 0.35f;
-        }
+        //    // Disable movement 
+        //    m_disableMovementTimer = 0.35f;
+        //}
 
         //Attack
         else if (Input.GetMouseButtonDown(0) && !m_dodging && !m_ledgeGrab && !m_ledgeClimb && !m_crouching && m_grounded && m_timeSinceAttack > 0.2f)
@@ -269,14 +274,14 @@ public class PrototypeHero : MonoBehaviour {
         }
 
         // Air Attack Up
-        else if (Input.GetMouseButtonDown(0) && Input.GetKey("w") && !m_dodging && !m_ledgeGrab && !m_ledgeClimb && !m_crouching && !m_grounded && m_timeSinceAttack > 0.2f)
-        {
-            Debug.Log("Air attack up");
-            m_animator.SetTrigger("AirAttackUp");
+        //else if (Input.GetMouseButtonDown(0) && Input.GetKey("w") && !m_dodging && !m_ledgeGrab && !m_ledgeClimb && !m_crouching && !m_grounded && m_timeSinceAttack > 0.2f)
+        //{
+        //    Debug.Log("Air attack up");
+        //    m_animator.SetTrigger("AirAttackUp");
 
-            // Reset timer
-            m_timeSinceAttack = 0.0f;
-        }
+        //    // Reset timer
+        //    m_timeSinceAttack = 0.0f;
+        //}
 
         // Air Attack
         else if (Input.GetMouseButtonDown(0) && !m_dodging && !m_ledgeGrab && !m_ledgeClimb && !m_crouching && !m_grounded && m_timeSinceAttack > 0.2f)
@@ -307,14 +312,14 @@ public class PrototypeHero : MonoBehaviour {
         }
 
         // Ledge Climb
-        else if(Input.GetKeyDown("w") && m_ledgeGrab)
-        {
-            DisableWallSensors();
-            m_ledgeClimb = true;
-            m_body2d.gravityScale = 0;
-            m_disableMovementTimer = 6.0f/14.0f;
-            m_animator.SetTrigger("LedgeClimb");
-        }
+        //else if(Input.GetKeyDown("w") && m_ledgeGrab)
+        //{
+        //    DisableWallSensors();
+        //    m_ledgeClimb = true;
+        //    m_body2d.gravityScale = 0;
+        //    m_disableMovementTimer = 6.0f/14.0f;
+        //    m_animator.SetTrigger("LedgeClimb");
+        //}
 
         // Ledge Drop
         else if (Input.GetKeyDown("s") && m_ledgeGrab)
@@ -323,7 +328,7 @@ public class PrototypeHero : MonoBehaviour {
         }
 
         //Jump
-        else if (Input.GetButtonDown("Jump") && (m_grounded || m_wallSlide) && !m_dodging && !m_ledgeGrab && !m_ledgeClimb && !m_crouching && m_disableMovementTimer < 0.0f)
+        else if (Input.GetKeyDown(jumpKey) && (m_grounded || m_wallSlide) && !m_dodging && !m_ledgeGrab && !m_ledgeClimb && !m_crouching && m_disableMovementTimer < 0.0f)
         {
             // Check if it's a normal jump or a wall jump
             if(!m_wallSlide)
